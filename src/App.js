@@ -3,6 +3,7 @@ import employeesData from "./data/employees.json";
 import EmployeeList from "./components/EmployeeList";
 import EmployeeForm from "./components/EmployeeForm";
 import SearchFilter from "./components/SearchFilter";
+import Button from "./components/Button";
 import styles from "./App.module.css";
 
 const App = () => {
@@ -39,6 +40,7 @@ const App = () => {
       ...prevEmployees,
       { id: prevEmployees.length + 1, ...employee },
     ]);
+    setShowForm(false);
   };
 
   const handleSortByName = () => {
@@ -62,23 +64,35 @@ const App = () => {
   return (
     <div className={styles.app}>
       <h1>Employee Management App</h1>
-      <SearchFilter
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        departmentQuery={departmentQuery}
-        setDepartmentQuery={setDepartmentQuery}
+      <div className={styles.searchFilters}>
+        <SearchFilter
+          name="Search by Name"
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+        />
+        <SearchFilter
+          name="Search by Department"
+          searchQuery={departmentQuery}
+          setSearchQuery={setDepartmentQuery}
+        />
+      </div>
+
+      <Button
+        onClick={handleSortByName}
+        text="Sort by Name "
+        dynamicText={isAscending ? "(Ascending)" : "(Descending)"}
       />
-      <button onClick={handleSortByName}>
-        Sort by Name ({isAscending ? "Ascending" : "Descending"})
-      </button>
       {searchQuery && filteredEmployees.length === 0 ? (
         <p>No employees found with the name "{searchQuery}"</p>
       ) : (
         <EmployeeList employees={filteredEmployees} />
       )}
-      <button onClick={() => setShowForm((prev) => !prev)}>
-        {showForm ? "Cancel" : "Add Employee"}
-      </button>
+
+      <Button
+        onClick={() => setShowForm((prev) => !prev)}
+        text=""
+        dynamicText={showForm ? "Cancel" : "Add Employee"}
+      />
       {showForm && <EmployeeForm addEmployee={addEmployee} />}
     </div>
   );

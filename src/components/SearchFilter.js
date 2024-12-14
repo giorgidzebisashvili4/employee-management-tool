@@ -1,27 +1,15 @@
 import React from "react";
 import styles from "./SearchFilter.module.css";
 
-const SearchFilter = ({
-  searchQuery,
-  setSearchQuery,
-  departmentQuery,
-  setDepartmentQuery,
-}) => {
+const SearchFilter = ({ name, searchQuery, setSearchQuery }) => {
   return (
     <div className={styles.container}>
       <input
         className={styles.input}
         type="text"
-        placeholder="Search by name"
+        placeholder={name}
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-      />
-      <input
-        className={styles.input}
-        type="text"
-        placeholder="Search by department"
-        value={departmentQuery}
-        onChange={(e) => setDepartmentQuery(e.target.value)}
       />
     </div>
   );

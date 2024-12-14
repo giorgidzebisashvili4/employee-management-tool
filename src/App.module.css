@@ -5,3 +5,7 @@
   justify-content: start;
   height: 100vh;
 }
+.searchFilters {
+  display: flex;
+  gap: 10px;
+}
