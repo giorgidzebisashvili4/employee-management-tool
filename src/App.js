@@ -71,7 +71,7 @@ const App = () => {
           setSearchQuery={setNameQuery}
         />
         <SearchFilter
-          name="Search by Department"
+          name="Filter by Department"
           searchQuery={departmentQuery}
           setSearchQuery={setDepartmentQuery}
         />
