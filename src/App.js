@@ -8,7 +8,7 @@ import styles from "./App.module.css";
 
 const App = () => {
   const [employees, setEmployees] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [nameQuery, setNameQuery] = useState("");
   const [departmentQuery, setDepartmentQuery] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [isAscending, setIsAscending] = useState(true); // For sorting order
@@ -57,7 +57,7 @@ const App = () => {
 
   const filteredEmployees = employees.filter(
     (emp) =>
-      emp.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      emp.name.toLowerCase().includes(nameQuery.toLowerCase()) &&
       emp.department.toLowerCase().includes(departmentQuery.toLowerCase())
   );
 
@@ -67,8 +67,8 @@ const App = () => {
       <div className={styles.searchFilters}>
         <SearchFilter
           name="Search by Name"
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
+          searchQuery={nameQuery}
+          setSearchQuery={setNameQuery}
         />
         <SearchFilter
           name="Search by Department"
@@ -82,11 +82,12 @@ const App = () => {
         text="Sort by Name "
         dynamicText={isAscending ? "(Ascending)" : "(Descending)"}
       />
-      {searchQuery && filteredEmployees.length === 0 ? (
-        <p>No employees found with the name "{searchQuery}"</p>
-      ) : (
-        <EmployeeList employees={filteredEmployees} />
-      )}
+
+      <EmployeeList
+        employees={filteredEmployees}
+        nameQuery={nameQuery}
+        departmentQuery={departmentQuery}
+      />
 
       <Button
         onClick={() => setShowForm((prev) => !prev)}
