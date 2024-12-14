@@ -6,21 +6,32 @@ import SearchFilter from "./components/SearchFilter";
 import styles from "./App.module.css";
 
 const App = () => {
-  const [employees, setEmployees] = useState(employeesData);
+  const [employees, setEmployees] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [departmentQuery, setDepartmentQuery] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [isAscending, setIsAscending] = useState(true); // For sorting order
 
-  // Load data from employees.json or localStorage
   useEffect(() => {
     const savedEmployees = localStorage.getItem("employees");
-    setEmployees(savedEmployees ? JSON.parse(savedEmployees) : employeesData);
+
+    if (savedEmployees) {
+      // If data exists in localStorage, use it
+      setEmployees(JSON.parse(savedEmployees));
+    } else {
+      // If no data in localStorage, use default JSON data
+      setEmployees(employeesData);
+
+      // Save default JSON data to localStorage
+      localStorage.setItem("employees", JSON.stringify(employeesData));
+    }
   }, []);
 
   // Save employees to localStorage whenever they change
   useEffect(() => {
-    localStorage.setItem("employees", JSON.stringify(employees));
+    if (employees.length > 0) {
+      localStorage.setItem("employees", JSON.stringify(employees));
+    }
   }, [employees]);
 
   const addEmployee = (employee) => {
@@ -28,7 +39,6 @@ const App = () => {
       ...prevEmployees,
       { id: prevEmployees.length + 1, ...employee },
     ]);
-    setShowForm(false); // Hide form after adding
   };
 
   const handleSortByName = () => {
