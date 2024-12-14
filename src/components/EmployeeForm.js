@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import styles from "./EmployeeForm.module.css";
 
 const EmployeeForm = ({ addEmployee }) => {
   const [formData, setFormData] = useState({
@@ -11,15 +12,16 @@ const EmployeeForm = ({ addEmployee }) => {
     e.preventDefault();
     if (formData.name && formData.department && formData.role) {
       addEmployee(formData);
-      setFormData({ name: "", department: "", role: "" }); // Reset form
+      setFormData({ name: "", department: "", role: "" });
     } else {
       alert("Please fill out all fields.");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className={styles.form} onSubmit={handleSubmit}>
       <input
+        className={styles.input}
         type="text"
         placeholder="Name"
         value={formData.name}
@@ -27,6 +29,7 @@ const EmployeeForm = ({ addEmployee }) => {
         required
       />
       <input
+        className={styles.input}
         type="text"
         placeholder="Department"
         value={formData.department}
@@ -36,13 +39,16 @@ const EmployeeForm = ({ addEmployee }) => {
         required
       />
       <input
+        className={styles.input}
         type="text"
         placeholder="Role"
         value={formData.role}
         onChange={(e) => setFormData({ ...formData, role: e.target.value })}
         required
       />
-      <button type="submit">Submit</button>
+      <button className={styles.button} type="submit">
+        Submit
+      </button>
     </form>
   );
 };

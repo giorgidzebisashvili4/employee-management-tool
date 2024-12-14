@@ -1,0 +1,18 @@
+.container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.input {
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 200px;
+}
+
+.input:focus {
+  border-color: #4caf50;
+  outline: none;
+}
