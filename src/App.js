@@ -77,17 +77,17 @@ const App = () => {
         />
       </div>
 
-      <Button
-        onClick={handleSortByName}
-        text="Sort by Name "
-        dynamicText={isAscending ? "(Ascending)" : "(Descending)"}
-      />
-
       <EmployeeList
         employees={filteredEmployees}
         nameQuery={nameQuery}
         departmentQuery={departmentQuery}
-      />
+      >
+        <Button
+          onClick={handleSortByName}
+          text="Sort by Name "
+          dynamicText={isAscending ? "(Ascending)" : "(Descending)"}
+        />
+      </EmployeeList>
 
       <Button
         onClick={() => setShowForm((prev) => !prev)}

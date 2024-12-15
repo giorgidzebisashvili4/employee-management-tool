@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./EmployeeList.module.css";
 
-const EmployeeList = ({ employees, nameQuery, departmentQuery }) => {
+const EmployeeList = ({ employees, nameQuery, departmentQuery, children }) => {
   if (employees.length === 0) {
     if (nameQuery && departmentQuery) {
       return (
@@ -22,26 +22,29 @@ const EmployeeList = ({ employees, nameQuery, departmentQuery }) => {
   }
 
   return (
-    <div>
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Department</th>
-            <th>Role</th>
-          </tr>
-        </thead>
-        <tbody>
-          {employees.map((emp) => (
-            <tr key={emp.id} className={styles.row}>
-              <td>{emp.name}</td>
-              <td>{emp.department}</td>
-              <td>{emp.role}</td>
+    <>
+      {children}
+      <div>
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Department</th>
+              <th>Role</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            {employees.map((emp) => (
+              <tr key={emp.id} className={styles.row}>
+                <td>{emp.name}</td>
+                <td>{emp.department}</td>
+                <td>{emp.role}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
   );
 };
 
