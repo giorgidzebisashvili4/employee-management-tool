@@ -77,6 +77,13 @@ const App = () => {
         emp.department.toLowerCase().includes(departmentQuery.toLowerCase())
     );
   }, [employees, nameQuery, departmentQuery]);
+  const handleAddEmployee = () => {
+    setShowForm((prev) => !prev);
+    if (nameQuery !== "" || departmentQuery !== "") {
+      setNameQuery("");
+      setDepartmentQuery("");
+    }
+  };
 
   return (
     <div className={styles.app}>
@@ -111,7 +118,7 @@ const App = () => {
             />
           </EmployeeList>
           <Button
-            onClick={() => setShowForm((prev) => !prev)}
+            onClick={handleAddEmployee}
             text=""
             dynamicText={showForm ? "Cancel" : "Add Employee"}
           />
