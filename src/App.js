@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import employeesData from "./data/employees.json";
 import EmployeeList from "./components/EmployeeList";
 import EmployeeForm from "./components/EmployeeForm";
@@ -7,24 +7,21 @@ import Button from "./components/Button";
 import styles from "./App.module.css";
 
 const App = () => {
-  const [employees, setEmployees] = useState([]);
+  const [employees, setEmployees] = useState([]); // Starts as empty
   const [nameQuery, setNameQuery] = useState("");
   const [departmentQuery, setDepartmentQuery] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [isAscending, setIsAscending] = useState(true); // For sorting order
 
+  // Load data on first render
   useEffect(() => {
     const savedEmployees = localStorage.getItem("employees");
 
-    if (savedEmployees) {
-      // If data exists in localStorage, use it
-      setEmployees(JSON.parse(savedEmployees));
+    if (savedEmployees && savedEmployees !== "[]") {
+      setEmployees(JSON.parse(savedEmployees)); // Load from localStorage if available
     } else {
-      // If no data in localStorage, use default JSON data
-      setEmployees(employeesData);
-
-      // Save default JSON data to localStorage
-      localStorage.setItem("employees", JSON.stringify(employeesData));
+      setEmployees(employeesData); // Load default JSON data
+      localStorage.setItem("employees", JSON.stringify(employeesData)); // Save to localStorage
     }
   }, []);
 
@@ -35,31 +32,36 @@ const App = () => {
     }
   }, [employees]);
 
+  // Add a new employee
   const addEmployee = (employee) => {
-    setEmployees((prevEmployees) => [
-      ...prevEmployees,
-      { id: prevEmployees.length + 1, ...employee },
-    ]);
+    const updatedEmployees = [
+      ...employees,
+      { id: employees.length + 1, ...employee },
+    ];
+    setEmployees(updatedEmployees); // Add and maintain sorting order
     setShowForm(false);
   };
 
+  // Sort employees by name
   const handleSortByName = () => {
-    const sortedEmployees = [...employees].sort((a, b) => {
-      if (isAscending) {
-        return a.name.localeCompare(b.name);
-      } else {
-        return b.name.localeCompare(a.name);
-      }
-    });
+    const sortedEmployees = [...employees].sort((a, b) =>
+      isAscending ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)
+    );
     setEmployees(sortedEmployees);
     setIsAscending(!isAscending); // Toggle sorting order
   };
 
-  const filteredEmployees = employees.filter(
-    (emp) =>
-      emp.name.toLowerCase().includes(nameQuery.toLowerCase()) &&
-      emp.department.toLowerCase().includes(departmentQuery.toLowerCase())
-  );
+  // Filter employees based on queries
+  // useMemo to avoid unnecessary re-renders
+  // in small apps useMemo memo useCallback is not needed but in larger apps it can be useful
+  // and its outside of our scope
+  const filteredEmployees = useMemo(() => {
+    return employees.filter(
+      (emp) =>
+        emp.name.toLowerCase().includes(nameQuery.toLowerCase()) &&
+        emp.department.toLowerCase().includes(departmentQuery.toLowerCase())
+    );
+  }, [employees, nameQuery, departmentQuery]);
 
   return (
     <div className={styles.app}>
