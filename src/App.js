@@ -26,6 +26,7 @@ const App = () => {
         localStorage.setItem("employees", JSON.stringify(employeesData));
       }
     } catch (err) {
+      console.error("Error loading employee data:", err);
       setError("Failed to load employee data.");
     } finally {
       setIsLoading(false);
@@ -34,8 +35,15 @@ const App = () => {
 
   // Save employees to localStorage whenever they change
   useEffect(() => {
-    if (employees.length > 0) {
-      localStorage.setItem("employees", JSON.stringify(employees));
+    try {
+      if (employees.length > 0) {
+        localStorage.setItem("employees", JSON.stringify(employees));
+      }
+    } catch (err) {
+      console.error("Error saving to localStorage:", err);
+      setError(
+        "Failed to save employee data. Please ensure sufficient browser storage."
+      );
     }
   }, [employees]);
 
@@ -73,9 +81,11 @@ const App = () => {
   return (
     <div className={styles.app}>
       <h1>Employee Management App</h1>
-      {isLoading && <p>Loading...</p>}
-      {error && <p className={styles.error}>{error}</p>}
-      {!error && (
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : error ? (
+        <p className={styles.error}>{error}</p>
+      ) : (
         <>
           <div className={styles.searchFilters}>
             <SearchFilter
@@ -89,7 +99,6 @@ const App = () => {
               setSearchQuery={setDepartmentQuery}
             />
           </div>
-
           <EmployeeList
             employees={filteredEmployees}
             nameQuery={nameQuery}
@@ -101,7 +110,6 @@ const App = () => {
               dynamicText={isAscending ? "(Ascending)" : "(Descending)"}
             />
           </EmployeeList>
-
           <Button
             onClick={() => setShowForm((prev) => !prev)}
             text=""
