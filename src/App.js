@@ -12,16 +12,23 @@ const App = () => {
   const [departmentQuery, setDepartmentQuery] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [isAscending, setIsAscending] = useState(true); // For sorting order
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Load data on first render
   useEffect(() => {
-    const savedEmployees = localStorage.getItem("employees");
-
-    if (savedEmployees && savedEmployees !== "[]") {
-      setEmployees(JSON.parse(savedEmployees)); // Load from localStorage if available
-    } else {
-      setEmployees(employeesData); // Load default JSON data
-      localStorage.setItem("employees", JSON.stringify(employeesData)); // Save to localStorage
+    try {
+      const savedEmployees = localStorage.getItem("employees");
+      if (savedEmployees && savedEmployees !== "[]") {
+        setEmployees(JSON.parse(savedEmployees));
+      } else {
+        setEmployees(employeesData);
+        localStorage.setItem("employees", JSON.stringify(employeesData));
+      }
+    } catch (err) {
+      setError("Failed to load employee data.");
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -66,37 +73,43 @@ const App = () => {
   return (
     <div className={styles.app}>
       <h1>Employee Management App</h1>
-      <div className={styles.searchFilters}>
-        <SearchFilter
-          name="Search by Name"
-          searchQuery={nameQuery}
-          setSearchQuery={setNameQuery}
-        />
-        <SearchFilter
-          name="Filter by Department"
-          searchQuery={departmentQuery}
-          setSearchQuery={setDepartmentQuery}
-        />
-      </div>
+      {isLoading && <p>Loading...</p>}
+      {error && <p className={styles.error}>{error}</p>}
+      {!error && (
+        <>
+          <div className={styles.searchFilters}>
+            <SearchFilter
+              name="Search by Name"
+              searchQuery={nameQuery}
+              setSearchQuery={setNameQuery}
+            />
+            <SearchFilter
+              name="Filter by Department"
+              searchQuery={departmentQuery}
+              setSearchQuery={setDepartmentQuery}
+            />
+          </div>
 
-      <EmployeeList
-        employees={filteredEmployees}
-        nameQuery={nameQuery}
-        departmentQuery={departmentQuery}
-      >
-        <Button
-          onClick={handleSortByName}
-          text="Sort by Name "
-          dynamicText={isAscending ? "(Ascending)" : "(Descending)"}
-        />
-      </EmployeeList>
+          <EmployeeList
+            employees={filteredEmployees}
+            nameQuery={nameQuery}
+            departmentQuery={departmentQuery}
+          >
+            <Button
+              onClick={handleSortByName}
+              text="Sort by Name "
+              dynamicText={isAscending ? "(Ascending)" : "(Descending)"}
+            />
+          </EmployeeList>
 
-      <Button
-        onClick={() => setShowForm((prev) => !prev)}
-        text=""
-        dynamicText={showForm ? "Cancel" : "Add Employee"}
-      />
-      {showForm && <EmployeeForm addEmployee={addEmployee} />}
+          <Button
+            onClick={() => setShowForm((prev) => !prev)}
+            text=""
+            dynamicText={showForm ? "Cancel" : "Add Employee"}
+          />
+          {showForm && <EmployeeForm addEmployee={addEmployee} />}
+        </>
+      )}
     </div>
   );
 };
