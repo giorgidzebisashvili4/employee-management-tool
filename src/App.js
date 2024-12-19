@@ -69,7 +69,7 @@ const App = () => {
   // Filter employees based on queries
   // useMemo to avoid unnecessary re-renders
   // in small apps useMemo memo useCallback is not needed but in larger apps it can be useful
-  // and its outside of our scope
+  // and its outside of our study scope
   const filteredEmployees = useMemo(() => {
     return employees.filter(
       (emp) =>
